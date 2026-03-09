@@ -1,0 +1,33 @@
+<h1>Posts</h1>
+<%= form_with url: posts_path, method: :get do %>
+  <%= text_field_tag :q, params[:q], placeholder: 'Search posts...' %>
+  <%= submit_tag 'Search' %>
+<% end %>
+
+<% if @categories.any? %>
+  <div>
+    <%= link_to 'All', posts_path %> |
+    <% @categories.each do |cat| %>
+      <%= link_to cat.name, posts_path(category_id: cat.id) %> |
+    <% end %>
+  </div>
+<% end %>
+
+<%= link_to 'New Post', new_post_path if current_user %>
+<%= link_to 'Categories', categories_path if current_user %>
+<%= paginate @posts %>
+<% @posts.each do |post| %>
+  <div>
+    <h2><%= link_to post.title, post %></h2>
+    <p><%= truncate(post.content, length: ApplicationHelper::CONTENT_PREVIEW_LENGTH) %></p>
+    <small>
+      by <%= post.user.email %>
+      <% if post.category %> in <%= post.category.name %><% end %>
+      | <%= post.views_count %> views
+      | <%= post.comments.size %> comments
+      | <%= time_ago_in_words(post.created_at) %> ago
+      <% unless post.published %> | <strong>DRAFT</strong><% end %>
+    </small>
+  </div>
+<% end %>
+<%= paginate @posts %>

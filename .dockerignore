@@ -1,0 +1,9 @@
+.git
+.claude
+tmp
+log
+.env
+.env.local
+*.sqlite3
+node_modules
+.DS_Store

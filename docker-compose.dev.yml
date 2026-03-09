@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ror_app
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ror_app_development
+    volumes:
+      - postgres_dev:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: bash -c "bundle exec rails db:create db:migrate && bundle exec rails server -b 0.0.0.0"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://ror_app:password@db:5432/ror_app_development
+      RAILS_ENV: development
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+
+volumes:
+  postgres_dev:
+  bundle_cache:

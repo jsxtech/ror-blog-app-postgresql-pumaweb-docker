@@ -1,0 +1,12 @@
+<h1>Edit Post</h1>
+<%= form_with model: @post do |f| %>
+  <% if @post.errors.any? %>
+    <div><%= @post.errors.full_messages.join(', ') %></div>
+  <% end %>
+  <%= f.text_field :title, placeholder: 'Title' %><br>
+  <%= f.text_area :content, placeholder: 'Content' %><br>
+  <%= f.collection_select :category_id, @categories, :id, :name, { prompt: 'Select category' }, { required: false } %><br>
+  <%= f.check_box :published %>
+  <%= f.label :published, 'Published' %><br>
+  <%= f.submit 'Update' %>
+<% end %>

@@ -1,0 +1,10 @@
+<h1>Categories</h1>
+<%= link_to 'New Category', new_category_path %>
+<ul>
+  <% @categories.each do |category| %>
+    <li>
+      <%= link_to category.name, posts_path(category_id: category.id) %>
+      (<%= category.posts.size %>)
+    </li>
+  <% end %>
+</ul>

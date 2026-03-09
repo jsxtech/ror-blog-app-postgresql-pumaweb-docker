@@ -1,0 +1,23 @@
+<h1>New Post</h1>
+<%= form_with model: @post do |f| %>
+  <% if @post.errors.any? %>
+    <div><%= @post.errors.full_messages.join(', ') %></div>
+  <% end %>
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+  <div>
+    <%= f.label :content %>
+    <%= f.text_area :content %>
+  </div>
+  <div>
+    <%= f.label :category %>
+    <%= f.collection_select :category_id, @categories, :id, :name, { prompt: 'Select category' }, { required: false } %>
+  </div>
+  <div>
+    <%= f.check_box :published %>
+    <%= f.label :published, 'Publish now' %>
+  </div>
+  <%= f.submit %>
+<% end %>

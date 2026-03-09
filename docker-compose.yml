@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ror_app
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ror_app_production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ror_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: bash -c "bundle exec rails db:create db:migrate && bundle exec puma -C config/puma.rb"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://ror_app:password@db:5432/ror_app_production
+      RAILS_ENV: production
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-development_secret_key_base_change_in_production}
+      RAILS_SERVE_STATIC_FILES: "true"
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+
+volumes:
+  postgres_data:
+  bundle_cache:
