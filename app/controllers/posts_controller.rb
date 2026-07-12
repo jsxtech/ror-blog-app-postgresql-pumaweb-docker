@@ -5,14 +5,14 @@ class PostsController < ApplicationController
 
   def index
     @posts = if current_user
-      Post.where(published: true).or(Post.where(user: current_user)).includes(:user, :category)
+      Post.where(published: true).or(Post.where(user: current_user)).includes(:user, :category, :comments)
     else
-      Post.published.includes(:user, :category)
+      Post.published.includes(:user, :category, :comments)
     end
     @posts = @posts.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:q].present?
       query = Post.sanitize_sql_like(params[:q])
-      @posts = @posts.where("title LIKE ? OR content LIKE ?", "%#{query}%", "%#{query}%")
+      @posts = @posts.where("title ILIKE ? OR content ILIKE ?", "%#{query}%", "%#{query}%")
     end
     @posts = @posts.order(created_at: :desc).page(params[:page]).per(ApplicationHelper::POSTS_PER_PAGE)
     @categories = Category.all
@@ -61,12 +61,13 @@ class PostsController < ApplicationController
   private
 
   def set_post
-    @post = Post.find(params[:id])
+    @post = Post.includes(:user, :category, :comments).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to posts_path, alert: 'Post not found.'
   end
 
   def authorize_user
+    return if performed?
     redirect_to posts_path, alert: 'Not authorized.' unless @post.user == current_user
   end
 
