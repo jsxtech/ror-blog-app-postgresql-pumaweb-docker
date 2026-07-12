@@ -2,7 +2,10 @@ class CategoriesController < ApplicationController
   before_action :require_login
 
   def index
-    @categories = Category.includes(:posts).all
+    @categories = Category.left_joins(:posts)
+                          .select("categories.*, COUNT(posts.id) AS posts_count")
+                          .group("categories.id")
+                          .order(:name)
   end
 
   def new
