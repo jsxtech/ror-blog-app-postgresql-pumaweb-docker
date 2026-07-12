@@ -22,12 +22,15 @@ class CommentsController < ApplicationController
 
   def set_post
     @post = Post.find(params[:post_id])
+    unless @post.published || @post.user == current_user
+      redirect_to posts_path, alert: 'Post not found.' and return
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to posts_path, alert: 'Post not found.'
   end
 
   def set_comment
-    @comment = Comment.find(params[:id])
+    @comment = Comment.find_by!(post_id: params[:post_id], id: params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to posts_path, alert: 'Comment not found.'
   end
