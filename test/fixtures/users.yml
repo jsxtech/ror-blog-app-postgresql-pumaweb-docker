@@ -1,0 +1,9 @@
+# password for both users is "password123"
+# password_digest below is BCrypt::Password.create("password123")
+alice:
+  email: alice@example.com
+  password_digest: "$2a$12$shf2ob8YXzrPcLDvfr6Ut..1XZnDUIhqqq.B7kqZie6Xm.wpWafKG"
+
+bob:
+  email: bob@example.com
+  password_digest: "$2a$12$shf2ob8YXzrPcLDvfr6Ut..1XZnDUIhqqq.B7kqZie6Xm.wpWafKG"
