@@ -13,6 +13,16 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
   end
 
+  test "login is case-insensitive on email" do
+    post session_path, params: { email: "ALICE@EXAMPLE.COM", password: "password123" }
+    assert_redirected_to root_path
+  end
+
+  test "login is whitespace-tolerant on email" do
+    post session_path, params: { email: "  alice@example.com  ", password: "password123" }
+    assert_redirected_to root_path
+  end
+
   test "login with invalid credentials fails" do
     post session_path, params: { email: users(:alice).email, password: "wrong" }
     assert_response :unprocessable_entity
