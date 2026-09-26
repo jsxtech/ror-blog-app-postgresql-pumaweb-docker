@@ -2,3 +2,7 @@
 *.sqlite3
 log/
 tmp/
+/vendor/bundle
+/storage/*
+!/storage/.keep
+.bundle/
