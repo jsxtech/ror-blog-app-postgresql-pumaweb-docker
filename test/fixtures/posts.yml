@@ -1,0 +1,21 @@
+published_post:
+  title: Published Post
+  content: This is a published post body.
+  user: alice
+  category: tech
+  published: true
+  views_count: 0
+
+draft_post:
+  title: Draft Post
+  content: This is a draft body.
+  user: alice
+  published: false
+  views_count: 0
+
+bobs_post:
+  title: Bobs Published Post
+  content: Bob wrote this.
+  user: bob
+  published: true
+  views_count: 5
